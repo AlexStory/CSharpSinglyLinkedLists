@@ -67,6 +67,7 @@ namespace SinglyLinkedListVisualizer
                 if (desiredMethod.GetParameters().First().ParameterType == typeof(int))
                 {
                     desiredMethod.Invoke(linkedList, new object[] { Convert.ToInt32(arg1), arg2 });
+
                 }
                 else
                 {

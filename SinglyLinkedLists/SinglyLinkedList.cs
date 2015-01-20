@@ -15,7 +15,7 @@ namespace SinglyLinkedLists
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
         {
-            throw new NotImplementedException();
+            
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/6x16t2tx.aspx
@@ -37,7 +37,7 @@ namespace SinglyLinkedLists
 
         public void AddLast(string value)
         {
-            throw new NotImplementedException();
+          
         }
 
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
@@ -53,7 +53,7 @@ namespace SinglyLinkedLists
 
         public string First()
         {
-            throw new NotImplementedException();
+          return this[0];
         }
 
         public int IndexOf(string value)
@@ -76,7 +76,7 @@ namespace SinglyLinkedLists
 
         public void Remove(string value)
         {
-            throw new NotImplementedException();
+          throw new NotImplementedException();
         }
 
         public void Sort()

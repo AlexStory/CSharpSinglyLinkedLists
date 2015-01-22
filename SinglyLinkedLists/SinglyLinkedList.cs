@@ -137,6 +137,7 @@ namespace SinglyLinkedLists
            if (node.Next == null) { break; }
            sorted = !(node > node.Next);
            node = node.Next;
+           if (sorted == false) { return sorted; }
           }
           return sorted;
         }
@@ -179,23 +180,47 @@ namespace SinglyLinkedLists
 
         public void Sort()
         {
-          SinglyLinkedListNode node = firstNode;
-          SinglyLinkedList list = new SinglyLinkedList();
-          List<SinglyLinkedListNode> available = new List<SinglyLinkedListNode>{};
+          if(firstNode == null || firstNode.Next == null){ return;}
+          SinglyLinkedListNode node = firstNode.Next;
+          SinglyLinkedListNode prev = firstNode;
+          SinglyLinkedListNode prevprev = null;
+          while (true) {
+            
+            SinglyLinkedListNode temp = null;
+            SinglyLinkedListNode temp2 = null;
 
-          for(int a = Count(); a > 0; a--){
-            available.Add(node);
-            node = node.Next;
+            while (!IsSorted()) {
+              if (firstNode > firstNode.Next) {
+                temp = firstNode.Next.Next;
+                temp2 = firstNode;
+                firstNode = firstNode.Next;
+                firstNode.Next = temp2;
+                firstNode.Next.Next = temp;
+
+                node = firstNode.Next;
+                prev = firstNode;
+                prevprev = null;
+                break;
+              }
+              if (prev > node) {
+                temp = node.Next;
+                temp2 = prev;
+                prev.Next = temp;
+                node.Next = prev;
+                prevprev.Next = node;
+
+                node = firstNode.Next;
+                prev = firstNode;
+                prevprev = null;
+                break;
+              }
+              prevprev = prev;
+              prev = node;
+              node = node.Next;
+              break;
+            }
+            if (IsSorted()) { break; }
           }
-
-          available.Sort();
-          for(int b =0; b < available.Count(); b++){
-            list.AddLast(available[b].ToString());
-          }
-
-          firstNode = list.firstNode;
-          
-          
         }
 
         public override string ToString() {

@@ -7,6 +7,7 @@ namespace SinglyLinkedLists
 {
     public class SinglyLinkedList
     {
+      private SinglyLinkedListNode firstNode;
         public SinglyLinkedList()
         {
             // NOTE: This constructor isn't necessary, once you've implemented the constructor below.
@@ -15,78 +16,212 @@ namespace SinglyLinkedLists
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
         {
-            
+          foreach (object val in values) {
+            AddLast(val.ToString());
+          }          
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/6x16t2tx.aspx
         public string this[int i]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+          get { return ElementAt(i); }
+            set {
+              SinglyLinkedListNode newNode = new SinglyLinkedListNode(value);
+              SinglyLinkedListNode node = firstNode;
+              SinglyLinkedListNode lastNode = new SinglyLinkedListNode("old");
+              for (; i > 0; i--) {
+                lastNode = node;
+                node = node.Next;
+              }
+              newNode.Next = node.Next;
+              lastNode.Next = newNode;
+            }
         }
 
         public void AddAfter(string existingValue, string value)
         {
-            throw new NotImplementedException();
+          if (IndexOf(existingValue) == -1) { throw new ArgumentException(); }
+          SinglyLinkedListNode node = firstNode;
+          SinglyLinkedListNode newNode = new SinglyLinkedListNode(value);
+          while (true) {
+            if (node.ToString() == existingValue) {
+              newNode.Next = node.Next;
+              node.Next = newNode;
+              break;
+            }
+            node = node.Next;
+          }
         }
 
         public void AddFirst(string value)
         {
-            throw new NotImplementedException();
+          SinglyLinkedListNode newNode = new SinglyLinkedListNode(value);
+          newNode = firstNode;
+          firstNode = new SinglyLinkedListNode(value);
+          firstNode.Next = newNode;
         }
 
         public void AddLast(string value)
         {
+          if (firstNode == null) {
+            firstNode = new SinglyLinkedListNode(value);
+          } else {
+            SinglyLinkedListNode node = firstNode;
+            while (true) {
+              if (node.Next != null) {
+                node = node.Next;
+              } else {
+                node.Next = new SinglyLinkedListNode(value);                
+                break;
+              }
+              
+            }
+          }
           
         }
 
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
         public int Count()
         {
-            throw new NotImplementedException();
+          int num = 0;
+          SinglyLinkedListNode node = firstNode;
+          while (true) {
+            if (node == null) { break; }
+            num++;
+            node = node.Next;
+          }
+          return num;
+
         }
 
         public string ElementAt(int index)
         {
-            throw new NotImplementedException();
+          SinglyLinkedListNode result = firstNode;
+          if (firstNode == null) { throw new ArgumentOutOfRangeException(); }
+          
+          for (int i = index; index > 0; index--) {
+            if (result == null) { throw new ArgumentOutOfRangeException(); }
+            result = result.Next;
+          }
+           return result.ToString() ;
         }
 
         public string First()
         {
-          return this[0];
+          if (firstNode == null) {
+            return null;
+          } else {
+            return firstNode.ToString();
+          }
+          
         }
 
         public int IndexOf(string value)
         {
-            throw new NotImplementedException();
+          int count = 0;
+          SinglyLinkedListNode node = firstNode;
+          while (true) {
+            if (node == null) { return -1; }
+            if (value == node.ToString()) { return count; }
+            count++;
+            node = node.Next; 
+          }
         }
 
         public bool IsSorted()
         {
-            throw new NotImplementedException();
+          if (firstNode == null || firstNode.Next == null) { return true; }
+          SinglyLinkedListNode node = firstNode;
+          bool sorted = true;
+          while (true) {
+           if (node.Next == null) { break; }
+           sorted = !(node > node.Next);
+           node = node.Next;
+          }
+          return sorted;
         }
+            
 
         // HINT 1: You can extract this functionality (finding the last item in the list) from a method you've already written!
         // HINT 2: I suggest writing a private helper method LastNode()
         // HINT 3: If you highlight code and right click, you can use the refactor menu to extract a method for you...
         public string Last()
         {
-            throw new NotImplementedException();
+          if (firstNode == null) { return null; }
+          SinglyLinkedListNode node = firstNode;
+          while (true) {
+            if (node.Next == null) {
+              return node.ToString();
+            } else {
+              node = node.Next;
+            }
+          }
         }
 
         public void Remove(string value)
         {
-          throw new NotImplementedException();
+          if (IndexOf(value) == -1) { return; }
+          SinglyLinkedListNode node = firstNode;
+          SinglyLinkedListNode lastNode = new SinglyLinkedListNode("old");
+          while (true) {
+            if (node.ToString() == value) {
+              if (node == firstNode) {
+                firstNode = node.Next;
+                break;
+              }
+              lastNode.Next = node.Next;
+              break;
+            }
+            lastNode = node;
+            node = node.Next;
+          } 
         }
 
         public void Sort()
         {
-            throw new NotImplementedException();
+          SinglyLinkedListNode node = firstNode;
+          SinglyLinkedList list = new SinglyLinkedList();
+          List<SinglyLinkedListNode> available = new List<SinglyLinkedListNode>{};
+
+          for(int a = Count(); a > 0; a--){
+            available.Add(node);
+            node = node.Next;
+          }
+
+          available.Sort();
+          for(int b =0; b < available.Count(); b++){
+            list.AddLast(available[b].ToString());
+          }
+
+          firstNode = list.firstNode;
+          
+          
         }
 
-        public string[] ToArray()
-        {
-            throw new NotImplementedException();
+        public override string ToString() {
+          SinglyLinkedListNode node = firstNode;
+          StringBuilder myString = new StringBuilder("{");
+          while (true) {
+            if (node == null) { break; }
+            myString.Append(" \"" + node.ToString() + "\"");
+            if (node.Next == null) { break; }
+            myString.Append(",");
+            node = node.Next;
+          }
+
+          myString.Append(" }");
+          return myString.ToString();
+        }
+
+        public string[] ToArray() {
+          List<string> myString = new List<string> { };
+          SinglyLinkedListNode node = firstNode;
+          while (true) {
+            if (node == null) { break; }
+            myString.Add(node.ToString());
+            node = node.Next;
+          }
+          return myString.ToArray();
         }
     }
 }

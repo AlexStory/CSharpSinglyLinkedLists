@@ -86,7 +86,7 @@ namespace UnitTestSinglyLinkedLists
             list.AddLast("foo");
             list.AddLast("bar");
             list.AddLast("grille");
-            list.ElementAt(-2);
+            Assert.AreEqual("bar", list.ElementAt(-2));
         }
         
         [TestMethod]
@@ -477,5 +477,14 @@ namespace UnitTestSinglyLinkedLists
             var expected = new string[] { "bar", "bar", "foo", "grille" };
             CollectionAssert.AreEqual(expected, list.ToArray());
         }
+
+        [TestMethod]
+        public void swap() {
+          SinglyLinkedList list = new SinglyLinkedList("foo", "bar", "grille", "bar");
+          list.Swap(0, 2);
+            
+            Assert.AreEqual("grille", list[0]);
+        }
+
     }
 }

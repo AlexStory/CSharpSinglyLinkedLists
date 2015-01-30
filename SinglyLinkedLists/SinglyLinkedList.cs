@@ -29,6 +29,13 @@ namespace SinglyLinkedLists
               SinglyLinkedListNode newNode = new SinglyLinkedListNode(value);
               SinglyLinkedListNode node = firstNode;
               SinglyLinkedListNode lastNode = new SinglyLinkedListNode("old");
+
+              if (i > -1) { }
+              if (i == 0) { 
+                var tempnex = firstNode.Next;
+                firstNode = newNode;
+                firstNode.Next = tempnex;
+              }
               for (; i > 0; i--) {
                 lastNode = node;
                 node = node.Next;
@@ -98,11 +105,20 @@ namespace SinglyLinkedLists
         {
           SinglyLinkedListNode result = firstNode;
           if (firstNode == null) { throw new ArgumentOutOfRangeException(); }
-          
-          for (int i = index; index > 0; index--) {
-            if (result == null) { throw new ArgumentOutOfRangeException(); }
-            result = result.Next;
+
+          if (index > -1) {
+            for (int i = index; index > 0; index--) {
+              if (result == null) { throw new ArgumentOutOfRangeException(); }
+              result = result.Next;
+            }
+          } else {
+            int num = Count() + index;
+            for (; num > 0; num--) {
+              if (result == null) { throw new ArgumentOutOfRangeException(); }
+              result = result.Next;
+            }
           }
+          
            return result.ToString() ;
         }
 
@@ -178,49 +194,36 @@ namespace SinglyLinkedLists
           } 
         }
 
-        public void Sort()
-        {
-          if(firstNode == null || firstNode.Next == null){ return;}
-          SinglyLinkedListNode node = firstNode.Next;
-          SinglyLinkedListNode prev = firstNode;
-          SinglyLinkedListNode prevprev = null;
-          while (true) {
-            
-            SinglyLinkedListNode temp = null;
-            SinglyLinkedListNode temp2 = null;
+        public void Sort() {
+          if (firstNode == null || firstNode.Next == null) { return; }
+          for (int i = 0; i < Count(); i++) {
+            SinglyLinkedListNode node = firstNode;
 
-            while (!IsSorted()) {
-              if (firstNode > firstNode.Next) {
-                temp = firstNode.Next.Next;
-                temp2 = firstNode;
-                firstNode = firstNode.Next;
-                firstNode.Next = temp2;
-                firstNode.Next.Next = temp;
-
-                node = firstNode.Next;
-                prev = firstNode;
-                prevprev = null;
-                break;
-              }
-              if (prev > node) {
-                temp = node.Next;
-                temp2 = prev;
-                prev.Next = temp;
-                node.Next = prev;
-                prevprev.Next = node;
-
-                node = firstNode.Next;
-                prev = firstNode;
-                prevprev = null;
-                break;
-              }
-              prevprev = prev;
-              prev = node;
+            for (int c = 0; c < i; c++) {
               node = node.Next;
-              break;
             }
-            if (IsSorted()) { break; }
+
+            var checkee = node.Next;
+            var lowest = node;
+            int lowestSpot = i;
+            for (int j = 0; j < Count() - i - 1; j++) {
+              if ( lowest > checkee) {
+                lowest = checkee;
+                lowestSpot = i + j + 1;
+              }
+              checkee = checkee.Next;
+            }
+            
+            Swap(i, lowestSpot);
           }
+          
+        }
+
+        public void Swap(int a, int b) {
+          var first = this[a];
+          var swap = this[b];
+          this[a] = swap;
+          this[b] = first;
         }
 
         public override string ToString() {
@@ -247,6 +250,16 @@ namespace SinglyLinkedLists
             node = node.Next;
           }
           return myString.ToArray();
+        }
+
+        public void RandomSort() {
+          while (!IsSorted()) {
+            var rnd = new Random();
+            int one = rnd.Next(0, Count());
+            int two = rnd.Next(0, Count());
+            Swap(one, two);
+          }
+          
         }
     }
 }
